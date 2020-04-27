@@ -8,7 +8,7 @@ Contents
 * resputil.py - reads in a resp file and checks a0 and overall sensitivity
 * respstitch.py - stitches two resp files together at a specified frequency
 * resp2sql.py - turns a resp file into a sql statement for inserting into a database
-
+* resp2extxml.py - reads poles and zeros from a resp file and converts to SIS extended station xml for uploading into SIS. For example, a pole-zero set from a station calibration.
 
 **External Dependencies:**
  * most of these were built on
