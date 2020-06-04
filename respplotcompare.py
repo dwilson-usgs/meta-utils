@@ -30,8 +30,10 @@ parser.add_argument("-f1", action="store", dest="RespFile",
                     required=True, help="Resp file")
 parser.add_argument("-f2", action="store", dest="RespFile2",
                     required=True, help="Resp file2")
-parser.add_argument("-t", action="store", dest="RespTime",
+parser.add_argument("-t1", action="store", dest="RespTime",
                     default='2099-12-31',  help="Time in case there are multiple epochs (default is latest)")
+parser.add_argument("-t2", action="store", dest="RespTime2",
+                    default=999,  help="Time to select from second epoch (default is same as t1)")
 
 parser.add_argument("-freq1", action="store", dest="StitchFreq1",
                     default=.001,  help="Lower frequency bound for error calc, default is .001")
@@ -45,7 +47,9 @@ freq2= np.float(args.StitchFreq2)
 fil = args.RespFile
 fil2 = args.RespFile2
 tt = args.RespTime
-
+tt2 = args.RespTime2
+if tt2==999:
+    tt2=tt
 
 try:
     xmlf = read_inventory(fil)
@@ -58,7 +62,7 @@ except:
     sys.exit("Couldn't read in file 2.")
 
 myresp1 = xmlf.select(time=UTCDateTime(tt))
-myresp2 = xmlf2.select(time=UTCDateTime(tt))
+myresp2 = xmlf2.select(time=UTCDateTime(tt2))
 
 cha=myresp1[0][0][0]
 cha2=myresp2[0][0][0]
@@ -86,8 +90,8 @@ ax1 = plt.subplot(311)
 ax2 = plt.subplot(312)
 ax3 = plt.subplot(313)
 
-ax1.semilogx(freqs,amp1,label=fil)
-ax1.semilogx(freqs,amp2,label=fil2)
+ax1.semilogx(freqs,amp1,label=fil+" "+tt)
+ax1.semilogx(freqs,amp2,label=fil2+" "+tt2)
 ax1.legend(loc='best')
 
 ax2.semilogx(freqs,ampper,color='g',label='amp1/amp2')
