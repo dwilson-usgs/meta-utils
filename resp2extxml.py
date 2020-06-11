@@ -18,6 +18,8 @@ parser.add_argument("-key", action="store", dest="Key",
                     default='ZP_STSX', help="Key for PZ representation (default is ZP_STSX)")
 parser.add_argument("-desc", action="store", dest="Title",
                     default='ASL calibration', help="PZ description (default is ASL calibration)")
+parser.add_argument("-a", action="store", dest="Calca0",
+                    default=True, help="recalculate a0? (default is True)")
 #parser.add_argument("-t", action="store", dest="RespTime",
 #                    default='2099-12-31',  help="Time in case there are multiple epochs (default is latest epoch)")
 #parser.add_argument("-freq", action="store", dest="NormFreq",
@@ -30,6 +32,18 @@ fil = args.RespFile
 #freq= np.float(args.NormFreq)
 desc = args.Title
 key = args.Key
+calcA=args.Calca0
+
+def calc_a0(resp,f):
+    pz=resp.get_paz()
+    omega=2*np.pi*f
+    a1=1
+    for n in range(len(pz.zeros)):
+        a1=a1*(1j*omega - pz.zeros[n])
+    for n in range(len(pz.poles)):
+        a1=a1/(1j*omega - pz.poles[n])
+    a0= 1/np.abs(a1)
+    return a0
 
 try:
     xmlf = read_inventory(fil)
@@ -48,23 +62,29 @@ fl=open(fil,mode='r')
 
 for line in fl:
     blks = line.split()
-    if ("B053F07" in blks[0]):
-        A0=blks[4]
-    elif ("B053F10-13" in blks[0]):
-        zdict.append(blks[1:])
-    elif "B053F15-18" in blks[0]:
-        pdict.append(blks[1:])
-    elif "B053F08" in blks[0] and freq > 998:
-        freq=blks[3]
-    elif "B053F05" in blks[0]:
-        IU=blks[5]
-        IUdesc=" ".join((blks[7:]))
-    elif "B053F06" in blks[0]:
-        OU=blks[5]
-        OUdesc=" ".join((blks[7:]))
+    if len(blks):
+        if ("B053F07" in blks[0]):
+            A0=blks[4]
+        elif ("B053F10-13" in blks[0]):
+            zdict.append(blks[1:])
+        elif "B053F15-18" in blks[0]:
+            pdict.append(blks[1:])
+        elif "B053F08" in blks[0] and freq > 998:
+            freq=blks[3]
+        elif "B053F05" in blks[0]:
+            IU=blks[5]
+            IUdesc=" ".join((blks[7:]))
+        elif "B053F06" in blks[0]:
+            OU=blks[5]
+            OUdesc=" ".join((blks[7:]))
         
 fl.close()
 
+if calcA:
+    mychan=xmlf[0][0][0]
+    print(mychan)
+    A0=calc_a0(mychan.response,float(freq))
+    
 print('<fsx:FDSNStationXML xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:fsx=\"http://www.fdsn.org/xml/station/1\" xmlns:sis=\"http://anss-sis.scsn.org/xml/ext-stationxml/2.2\" xsi:type=\"sis:RootType\" schemaVersion=\"2.2\" sis:schemaLocation=\"http://anss-sis.scsn.org/xml/ext-stationxml/2.2 https://anss-sis.scsn.org/xml/ext-stationxml/2.2/sis_extension.xsd\">')
 print('   <fsx:Source>ASL</fsx:Source>')
 print('    <fsx:Sender>ASL</fsx:Sender>')
