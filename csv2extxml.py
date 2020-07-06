@@ -29,9 +29,13 @@ net=args.network
 ow=args.owner
 
 f=open(ofil,'w')
+#f.write('<fsx:FDSNStationXML xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:fsx=\"http://www.fdsn.org/xml/station/1\" xmlns:sis=\"http://anss-sis.sc'+
+#        'sn.org/xml/ext-stationxml/2.2\" xsi:type=\"sis:RootType\" schemaVersion=\"2.2\" sis:schemaLocation=\"http://anss-sis.scsn.org/xml/ext-stationxml/2.2 https://anss-sis.sc'+
+#        'sn.org/xml/ext-stationxml/2.2/sis_extension.xsd\">\n')
 f.write('<fsx:FDSNStationXML xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:fsx=\"http://www.fdsn.org/xml/station/1\" xmlns:sis=\"http://anss-sis.sc'+
-        'sn.org/xml/ext-stationxml/2.2\" xsi:type=\"sis:RootType\" schemaVersion=\"2.2\" sis:schemaLocation=\"http://anss-sis.scsn.org/xml/ext-stationxml/2.2 https://anss-sis.sc'+
-        'sn.org/xml/ext-stationxml/2.2/sis_extension.xsd\">\n')
+        'sn.org/xml/ext-stationxml/3.0\" xsi:type=\"sis:RootType\" schemaVersion=\"3.0\" sis:schemaLocation=\"http://anss-sis.scsn.org/xml/ext-stationxml/3.0 https://anss-sis.sc'+
+        'sn.org/xml/ext-stationxml/3.0/sis_extension.xsd\">\n')
+
 f.write('   <fsx:Source>ASL</fsx:Source>\n')
 f.write('    <fsx:Sender>ASL</fsx:Sender>\n')
 f.write('    <fsx:Created>%s</fsx:Created>\n'%(datetime.datetime.utcnow().isoformat(timespec='seconds')+"Z"))

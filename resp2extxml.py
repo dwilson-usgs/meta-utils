@@ -85,7 +85,10 @@ if calcA:
     print(mychan)
     A0=calc_a0(mychan.response,float(freq))
     
-print('<fsx:FDSNStationXML xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:fsx=\"http://www.fdsn.org/xml/station/1\" xmlns:sis=\"http://anss-sis.scsn.org/xml/ext-stationxml/2.2\" xsi:type=\"sis:RootType\" schemaVersion=\"2.2\" sis:schemaLocation=\"http://anss-sis.scsn.org/xml/ext-stationxml/2.2 https://anss-sis.scsn.org/xml/ext-stationxml/2.2/sis_extension.xsd\">')
+#print('<fsx:FDSNStationXML xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:fsx=\"http://www.fdsn.org/xml/station/1\" xmlns:sis=\"http://anss-sis.scsn.org/xml/ext-stationxml/2.2\" xsi:type=\"sis:RootType\" schemaVersion=\"2.2\" sis:schemaLocation=\"http://anss-sis.scsn.org/xml/ext-stationxml/2.2 https://anss-sis.scsn.org/xml/ext-stationxml/2.2/sis_extension.xsd\">')
+print('<fsx:FDSNStationXML xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:fsx=\"http://www.fdsn.org/xml/station/1\" xmlns:sis=\"http://anss-sis.sc'+
+        'sn.org/xml/ext-stationxml/3.0\" xsi:type=\"sis:RootType\" schemaVersion=\"3.0\" sis:schemaLocation=\"http://anss-sis.scsn.org/xml/ext-stationxml/3.0 https://anss-sis.sc'+
+        'sn.org/xml/ext-stationxml/3.0/sis_extension.xsd\">\n')
 print('   <fsx:Source>ASL</fsx:Source>')
 print('    <fsx:Sender>ASL</fsx:Sender>')
 print('    <fsx:Created>%s</fsx:Created>'%(str(UTCDateTime())))
