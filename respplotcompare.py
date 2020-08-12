@@ -39,7 +39,10 @@ parser.add_argument("-freq1", action="store", dest="StitchFreq1",
                     default=.001,  help="Lower frequency bound for error calc, default is .001")
 parser.add_argument("-freq2", action="store", dest="StitchFreq2",
                     default=1,  help="Upper frequency bound for error calc, (default is 1Hz)")
-
+parser.add_argument("-s1", action="store", dest="StartStage",
+                    default=1, help="Start Stage, default =1")
+parser.add_argument("-s2", action="store", dest="EndStage",
+                    default=1, help="End Stage, default =1")
 args = parser.parse_args()
 
 freq1= np.float(args.StitchFreq1)
@@ -48,6 +51,9 @@ fil = args.RespFile
 fil2 = args.RespFile2
 tt = args.RespTime
 tt2 = args.RespTime2
+ss=int(args.StartStage)
+es=int(args.EndStage)
+
 if tt2==999:
     tt2=tt
 
@@ -73,8 +79,8 @@ mypz=cha.response.get_paz()
 print(mypz.normalization_frequency)
 ff=np.argmin(np.abs(freqs-mypz.normalization_frequency))
 
-amp1, phase1 = calc_resp2(cha.response,freqs,plot_degrees=True,end_stage=1)
-amp2, phase2 = calc_resp2(cha2.response,freqs,plot_degrees=True,end_stage=1)
+amp1, phase1 = calc_resp2(cha.response,freqs,plot_degrees=True,start_stage=ss,end_stage=es)
+amp2, phase2 = calc_resp2(cha2.response,freqs,plot_degrees=True,start_stage=ss,end_stage=es)
 
 #amp1=amp1-amp1[ff]
 #amp2=10**(np.log10(amp2)-(np.log10(amp2[ff])-np.log10(amp1[ff])))
