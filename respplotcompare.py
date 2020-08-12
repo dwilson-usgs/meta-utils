@@ -43,6 +43,8 @@ parser.add_argument("-s1", action="store", dest="StartStage",
                     default=1, help="Start Stage, default =1")
 parser.add_argument("-s2", action="store", dest="EndStage",
                     default=1, help="End Stage, default =1")
+parser.add_argument("-normf", action="store", dest="NormFreq",
+                    default=999, help="Normalization frequency, default overall sensitivity frequency")
 args = parser.parse_args()
 
 freq1= np.float(args.StitchFreq1)
@@ -53,7 +55,7 @@ tt = args.RespTime
 tt2 = args.RespTime2
 ss=int(args.StartStage)
 es=int(args.EndStage)
-
+nf= np.float(args.NormFreq)
 if tt2==999:
     tt2=tt
 
@@ -72,21 +74,27 @@ myresp2 = xmlf2.select(time=UTCDateTime(tt2))
 
 cha=myresp1[0][0][0]
 cha2=myresp2[0][0][0]
-
 logf=np.arange(np.log(freq1),np.log(freq2),.01)
 freqs=np.exp(logf)
-mypz=cha.response.get_paz()
-print(mypz.normalization_frequency)
-ff=np.argmin(np.abs(freqs-mypz.normalization_frequency))
-
 amp1, phase1 = calc_resp2(cha.response,freqs,plot_degrees=True,start_stage=ss,end_stage=es)
 amp2, phase2 = calc_resp2(cha2.response,freqs,plot_degrees=True,start_stage=ss,end_stage=es)
 
+print(cha.response.instrument_sensitivity.frequency)
+
+mypz=cha.response.get_paz()
+print(mypz.normalization_frequency)
+if nf > 998:
+    nf=cha.response.instrument_sensitivity.frequency
+    ff1=np.argmin(np.abs(freqs-nf))
+else:
+    ff1=np.argmin(np.abs(freqs-nf))
+
+    
 #amp1=amp1-amp1[ff]
 #amp2=10**(np.log10(amp2)-(np.log10(amp2[ff])-np.log10(amp1[ff])))
 amp1=20*np.log10(amp1)
 amp2=20*np.log10(amp2)
-amp1=amp1-(amp1[ff]-amp2[ff])
+amp1=amp1-(amp1[ff1]-amp2[ff1])
 ampdiff = amp1-amp2
 amprat=10**(ampdiff/20)
 ampper=100*(amprat-1)
@@ -111,8 +119,8 @@ ax2.legend(loc='best')
 ax3.grid()
 ax2.grid()
 ax1.set_title('%s / %s '%(fil,fil2))
-#ax1.set_xlim([.0001, 40])
-#ax2.set_xlim([.0001, 40])
+#ax1.set_xlim([.125, .25])
+#ax2.set_xlim([.125, .25])
 
 plt.show()
 
