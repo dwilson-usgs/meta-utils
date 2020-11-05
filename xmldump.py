@@ -51,12 +51,13 @@ for net in xmlf:
                 mps_dict[sta.code][epoch] = collections.defaultdict(dict)
             if not mps_dict[sta.code][epoch][chan.location_code]:
                 mps_dict[sta.code][epoch][chan.location_code] = collections.defaultdict(dict)
-            if not mps_dict[sta.code][epoch][chan.location_code]['sensor']:
-                mps_dict[sta.code][epoch][chan.location_code]['sensor']=sensor
-            if not mps_dict[sta.code][epoch][chan.location_code]['chans']:
-                mps_dict[sta.code][epoch][chan.location_code]['chans']=[mystr]
+            if not mps_dict[sta.code][epoch][chan.location_code][sensor]:
+                mps_dict[sta.code][epoch][chan.location_code][sensor] = collections.defaultdict(dict)
+                #mps_dict[sta.code][epoch][chan.location_code]['sensor']=sensor
+            if not mps_dict[sta.code][epoch][chan.location_code][sensor]['chans']:
+                mps_dict[sta.code][epoch][chan.location_code][sensor]['chans']=[mystr]
             else:
-                mps_dict[sta.code][epoch][chan.location_code]['chans'].append(mystr)
+                mps_dict[sta.code][epoch][chan.location_code][sensor]['chans'].append(mystr)
 
 
 # print if out of tolerance
@@ -69,9 +70,11 @@ for sta in mps_dict:
         print("\n ------------------------")
         print(epoch)
         for loc in mps_dict[sta][epoch]:
-            print("Location %s, sensor=%s"%(loc,mps_dict[sta][epoch][loc]['sensor']))
-            for chan in sorted(mps_dict[sta][epoch][loc]['chans']):
-                print("\t %s "%(chan))                           
+            for sensor in mps_dict[sta][epoch][loc]:
+                #print("Location %s, sensor=%s"%(loc,mps_dict[sta][epoch][loc]['sensor']))
+                print("Location %s, sensor=%s"%(loc,sensor))
+                for chan in sorted(mps_dict[sta][epoch][loc][sensor]['chans']):
+                    print("\t %s "%(chan))                           
 
 
 
