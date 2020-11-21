@@ -33,16 +33,20 @@ parser.add_argument("-f2", action="store", dest="RespFile2",
 parser.add_argument("-t1", action="store", dest="RespTime",
                     default='2099-12-31',  help="Time in case there are multiple epochs (default is latest)")
 parser.add_argument("-t2", action="store", dest="RespTime2",
-                    default=999,  help="Time to select from second epoch (default is same as t1)")
+                    default=999,  help="Time to select from second resp (default is same as t1)")
 
 parser.add_argument("-freq1", action="store", dest="StitchFreq1",
                     default=.001,  help="Lower frequency bound for error calc, default is .001")
 parser.add_argument("-freq2", action="store", dest="StitchFreq2",
                     default=1,  help="Upper frequency bound for error calc, (default is 1Hz)")
 parser.add_argument("-s1", action="store", dest="StartStage",
-                    default=1, help="Start Stage, default =1")
+                    default=1, help="Resp 1 Start Stage, default =1")
 parser.add_argument("-s2", action="store", dest="EndStage",
-                    default=1, help="End Stage, default =1")
+                    default=1, help="Resp 1 End Stage, default =1")
+parser.add_argument("-s1b", action="store", dest="StartStage2",
+                    default=999, help="Resp 2 Start Stage, default is same as s1")
+parser.add_argument("-s2b", action="store", dest="EndStage2",
+                    default=999, help="Resp 2 End Stage, default is same as s2")
 parser.add_argument("-normf", action="store", dest="NormFreq",
                     default=999, help="Normalization frequency, default overall sensitivity frequency")
 args = parser.parse_args()
@@ -55,6 +59,13 @@ tt = args.RespTime
 tt2 = args.RespTime2
 ss=int(args.StartStage)
 es=int(args.EndStage)
+ss2=int(args.StartStage2)
+es2=int(args.EndStage2)
+if ss2 == 999:
+    ss2=ss
+if es2 == 999:
+    es2=es
+    
 nf= np.float(args.NormFreq)
 if tt2==999:
     tt2=tt
@@ -77,7 +88,7 @@ cha2=myresp2[0][0][0]
 logf=np.arange(np.log(freq1),np.log(freq2),.01)
 freqs=np.exp(logf)
 amp1, phase1 = calc_resp2(cha.response,freqs,plot_degrees=True,start_stage=ss,end_stage=es)
-amp2, phase2 = calc_resp2(cha2.response,freqs,plot_degrees=True,start_stage=ss,end_stage=es)
+amp2, phase2 = calc_resp2(cha2.response,freqs,plot_degrees=True,start_stage=ss2,end_stage=es2)
 
 print(cha.response.instrument_sensitivity.frequency)
 
