@@ -10,6 +10,7 @@ Contents
 * resp2sql.py - turns a resp file into a sql statement for inserting into a database
 * resp2extxml.py - reads poles and zeros from a resp file and converts to SIS extended station xml for uploading into SIS. For example, a pole-zero set from a station calibration.
 * csv2extxml.py - reads a csv file and outputs an extended StationXML file for uploaded into SIS. This is meant for hardware (non-seismic) equipment.
+* FIR2extxml.py - reads a FIR filter cascade from a resp file and converts to SIS extended station xml for uploading into SIS.
 
 **External Dependencies:**
  * most of these were built on
