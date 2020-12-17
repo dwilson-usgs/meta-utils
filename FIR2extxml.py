@@ -22,6 +22,8 @@ parser.add_argument("-ss", action="store", dest="sStage",
                     default='4', help="number of the stage to start the filter cascade (default is 4)")
 parser.add_argument("-es", action="store", dest="eStage",
                     default='999', help="number of the stage to end the filter cascade (default is same as ss)")
+parser.add_argument("-t1", action="store", dest="RespTime",
+                    default='2099-12-31',  help="Time in case there are multiple epochs (default is latest)")
 
 freq=999
 
@@ -30,6 +32,8 @@ fil = args.RespFile
 desc = args.Title
 key = args.Key
 stagen=int(args.sStage)
+tt = args.RespTime
+
 if args.eStage == '999':
     stagex=stagen
 else:
@@ -50,9 +54,11 @@ def check_sym(st):
     return tf, nstop
     
 try:
-    xmlf = read_inventory(fil)
+    xmlf2 = read_inventory(fil)
 except:
     sys.exit("Couldn't read in file.")
+
+xmlf = xmlf2.select(time=UTCDateTime(tt))
 
 # Check to see if there is more than one epoch
 if len(xmlf[:][:][0]) >1:
