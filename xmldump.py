@@ -5,6 +5,8 @@ from obspy import read, UTCDateTime, read_inventory
 from obspy.clients.fdsn.header import FDSNNoDataException
 from numpy import median
 import collections
+from obspy.clients.fdsn import Client
+client = Client("IRIS")
 warnings.filterwarnings('ignore')
 
 import argparse
@@ -12,18 +14,27 @@ import argparse
 parser = argparse.ArgumentParser(description='read in  station xml or dataless and list contents')
 
 parser.add_argument("-f", action="store", dest="xfil",
-                    required=True, help="Station XML or dataless file")
-
+                    default='nofile', help="Station XML or dataless file")
+parser.add_argument("-n", action="store", dest="Network",
+                    default='nonet', help="Network Code. Only used if no file is given")
+parser.add_argument("-s", action="store", dest="Station",
+                    default='nosta', help="Station Code. Only used if no file is given")
 
 args = parser.parse_args()
 fil = args.xfil
+net1= args.Network
+sta1=args.Station
 
-
-try:
-    xmlf = read_inventory(fil)
-except:
-    sys.exit("Couldn't read in file.")
-
+if fil != "nofile":
+    try:
+        xmlf = read_inventory(fil)
+    except:
+        sys.exit("Couldn't read in file.")
+elif net1 != "nonet" and sta1 != "nosta":
+    xmlf = client.get_stations(network=net1,station=sta1, level='response')
+else:
+    sys.exit("Must provide either a file or network and station on input.")
+    
 #mps_df = pd.DataFrame(columns=['Station', 'Sensor', 'Location', 'Channel', 'Mass'])
 mps_dict = collections.defaultdict(dict)
 for net in xmlf:
@@ -76,5 +87,6 @@ for sta in mps_dict:
                 for chan in sorted(mps_dict[sta][epoch][loc][sensor]['chans']):
                     print("\t %s "%(chan))                           
 
+    
 
 
