@@ -42,6 +42,11 @@ for net in xmlf:
         for chan in sta:
             sncl = '{}.{}.{}.{}'.format(net.code, sta.code, chan.location_code, chan.code)
             sensor = chan.sensor.description
+            if chan.sensor.model is not None:
+                sensor+=" "+chan.sensor.model
+            if chan.sensor.serial_number is not None:
+                sensor+=" "+chan.sensor.serial_number
+            #print(chan.sensor)
             epoch="%s-%s"%(str(chan.start_date),str(chan.end_date))
             mystr="%s (%5.1f sps), dep:%4.1f, az:%4.1f, dip:%3.1f"%(sncl,chan.sample_rate,chan.depth,chan.azimuth,chan.dip)
             #print(mystr)
