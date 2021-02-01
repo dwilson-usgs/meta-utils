@@ -46,9 +46,15 @@ for net in xmlf:
                 sensor+=" "+chan.sensor.model
             if chan.sensor.serial_number is not None:
                 sensor+=" "+chan.sensor.serial_number
-            #print(chan.sensor)
+            #print(chan.types)
+            if 'TRIGGERED' in chan.types:
+                flag='T'
+            elif 'CONTINUOUS' in chan.types:
+                flag='C'
+            else:
+                flag=' '
             epoch="%s-%s"%(str(chan.start_date),str(chan.end_date))
-            mystr="%s (%5.1f sps), dep:%4.1f, az:%4.1f, dip:%3.1f"%(sncl,chan.sample_rate,chan.depth,chan.azimuth,chan.dip)
+            mystr="%s (%5.1f sps)%s, dep:%4.1f, az:%4.1f, dip:%3.1f"%(sncl,chan.sample_rate,flag,chan.depth,chan.azimuth,chan.dip)
             #print(mystr)
             #print(chan.response)
             if chan.response is not None:
