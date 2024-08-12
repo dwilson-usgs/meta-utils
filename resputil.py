@@ -27,7 +27,7 @@ parser.add_argument("-freq", action="store", dest="NormFreq",
 args = parser.parse_args()
 fil = args.RespFile
 tt = args.RespTime
-freq= np.float(args.NormFreq)
+freq= float(args.NormFreq)
 
 if 1:
     xmlf = read_inventory(fil)
